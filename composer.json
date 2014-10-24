@@ -1,7 +1,14 @@
 {
     "name": "icecave/stump",
-    "description": "This package needs a description!",
-    "keywords": [],
+    "description": "Incredibly simple PSR-3 compliant logging for Twelve-Factor applications.",
+    "keywords": [
+        "PSR-3",
+        "log",
+        "logging",
+        "twelve",
+        "factor",
+        "heroku"
+    ],
     "homepage": "https://github.com/IcecaveStudios/stump",
     "license": "MIT",
     "authors": [
