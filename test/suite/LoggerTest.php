@@ -22,30 +22,29 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->thenReturn('<date>');
 
         $this->logger = new Logger($this->minimumLogLevel);
+
         $this->logger->setIsolator($this->isolator);
     }
 
-    public function testPrefixWith()
+    public function testLog()
     {
-        $logger = $this->logger->prefixWith('foo');
-
-        $this->assertInstanceOf(
-            PrefixLogger::class,
-            $logger
+        $this->logger->log(
+            LogLevel::WARNING,
+            'Warning message.'
         );
 
-        $this->assertSame(
-            'foo',
-            $logger->prefix()
+        Phake::verify($this->isolator)->fopen(
+            'php://stdout',
+            'w'
         );
 
-        $this->assertSame(
-            $this->logger,
-            $logger->logger()
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            'WARNING <date>: Warning message.' . PHP_EOL
         );
     }
 
-    public function testLog()
+    public function testLogWithPlaceholderValues()
     {
         $this->logger->log(
             LogLevel::INFO,
@@ -56,32 +55,24 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ]
         );
 
-        $this->logger->log(
-            LogLevel::WARNING,
-            'Warning message.'
-        );
-
-        $dateVerifier = Phake::verify($this->isolator, Phake::times(2))->date('Y-m-d H:i:s');
-
-        Phake::inOrder(
-            Phake::verify($this->isolator)->fopen('php://stdout', 'w'),
-            $dateVerifier,
-            Phake::verify($this->isolator)->fwrite(
-                '<resource>',
-                'INFO <date>: Foo: FOO, F: F, Missing: {missing}' . PHP_EOL
-            ),
-            $dateVerifier,
-            Phake::verify($this->isolator)->fwrite(
-                '<resource>',
-                'WARNING <date>: Warning message.' . PHP_EOL
-            )
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            'INFO <date>: Foo: FOO, F: F, Missing: {missing}' . PHP_EOL
         );
     }
 
-    public function testBelowLevel()
+    public function testLogIgnoresLowLogLevel()
     {
-        $this->logger->log(LogLevel::DEBUG, 'Debug message.');
+        $this->logger->debug('This should not be logged.');
 
         Phake::verifyNoInteraction($this->isolator);
+    }
+
+    public function testLogOnlyOpensFileOnce()
+    {
+        $this->logger->info('one');
+        $this->logger->info('two');
+
+        Phake::verify($this->isolator, Phake::times(1))->fopen(Phake::anyParameters());
     }
 }
