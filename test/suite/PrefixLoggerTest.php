@@ -10,7 +10,7 @@ class PrefixLoggerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->targetLogger = Phake::mock(LoggerInterface::class);
+        $this->targetLogger = Phake::mock('Psr\Log\LoggerInterface');
 
         $this->logger = new PrefixLogger(
             'The Prefix: ',

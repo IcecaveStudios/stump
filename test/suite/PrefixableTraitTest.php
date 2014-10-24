@@ -8,7 +8,7 @@ class PrefixableTraitTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->logger = Phake::mock(PrefixLogger::class);
+        $this->logger = Phake::mock('Icecave\Stump\PrefixLogger');
 
         Phake::when($this->logger)
             ->prefixWith(Phake::anyParameters())
@@ -20,7 +20,7 @@ class PrefixableTraitTest extends PHPUnit_Framework_TestCase
         $logger = $this->logger->prefixWith('foo');
 
         $this->assertInstanceOf(
-            PrefixLogger::class,
+            'Icecave\Stump\PrefixLogger',
             $logger
         );
 

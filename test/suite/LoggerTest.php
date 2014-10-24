@@ -10,7 +10,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->isolator = Phake::mock(Isolator::class);
+        $this->isolator = Phake::mock('Icecave\Isolator\Isolator');
         $this->minimumLogLevel = LogLevel::INFO;
 
         Phake::when($this->isolator)
