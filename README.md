@@ -35,4 +35,4 @@ INFO 2014-10-24 16:26:13: It's better than bad... it's good!
 <!-- references -->
 [Build Status]: http://img.shields.io/travis/IcecaveStudios/stump/develop.svg?style=flat-square
 [Test Coverage]: http://img.shields.io/coveralls/IcecaveStudios/stump/develop.svg?style=flat-square
-[SemVer]: http://img.shields.io/:semver-0.1.0-yellow.svg?style=flat-square
+[SemVer]: http://img.shields.io/:semver-0.1.1-yellow.svg?style=flat-square

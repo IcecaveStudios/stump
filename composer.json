@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "icecave/isolator": "~3",
+        "icecave/isolator": "~2|~3",
         "psr/log": "~1"
     },
     "require-dev": {
