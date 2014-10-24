@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="index, follow, all" />
-        <title>Icecave\Stump\PrefixLogger | icecave/stump API</title>
+        <title>Icecave\Stump\SubLogger | icecave/stump API</title>
                     <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
                             </head>
         <body id="class">
@@ -19,14 +19,14 @@
         <div id="title">icecave/stump API</div>
 
             <div class="type">Class</div>
-    <h1><a href="../../Icecave/Stump.html">Icecave\Stump</a>\PrefixLogger</h1>
+    <h1><a href="../../Icecave/Stump.html">Icecave\Stump</a>\SubLogger</h1>
     </div>
         <div class="content">
-                <p>class    <strong>PrefixLogger</strong>        implements
-        <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr>, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr>, <a href="../../Icecave/Stump/PrefixableInterface.html"><abbr title="Icecave\Stump\PrefixableInterface">PrefixableInterface</abbr></a></p>
+                <p>class    <strong>SubLogger</strong>        implements
+        <abbr title="Psr\Log\LoggerAwareInterface">LoggerAwareInterface</abbr>, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr>, <a href="../../Icecave/Stump/ParentLoggerInterface.html"><abbr title="Icecave\Stump\ParentLoggerInterface">ParentLoggerInterface</abbr></a></p>
 
             <div class="description">
-            <p>A logger that prefixes all messages with a fixed string.</p>
+            <p>A logger that prepends its name to all messages.</p>
             <p>
 </p>
         </div>
@@ -41,7 +41,7 @@
                     
                 </td>
                 <td class="last">
-                    <a href="#method___construct">__construct</a>(string $prefix, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr> $logger)
+                    <a href="#method___construct">__construct</a>(string $name, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr> $logger)
                     <p>
 </p>
                 </td>
@@ -52,9 +52,8 @@
                     string
                 </td>
                 <td class="last">
-                    <a href="#method_prefix">prefix</a>()
-                    <p>
-</p>
+                    <a href="#method_name">name</a>()
+                    <p>Get the sub-logger name.</p>
                 </td>
                 <td></td>
             </tr>
@@ -64,8 +63,7 @@
                 </td>
                 <td class="last">
                     <a href="#method_logger">logger</a>()
-                    <p>
-</p>
+                    <p>Get the target logger.</p>
                 </td>
                 <td></td>
             </tr>
@@ -75,7 +73,7 @@
                 </td>
                 <td class="last">
                     <a href="#method_log">log</a>(mixed $level, string $message, array $context = array())
-                    <p>Logs with an arbitrary level.</p>
+                    <p>Log a message.</p>
                 </td>
                 <td></td>
             </tr>
@@ -87,7 +85,7 @@
                         <h3 id="method___construct">
         <div class="location">at line 25</div>
         <code>            public            
-    <strong>__construct</strong>(string $prefix, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr> $logger)</code>
+    <strong>__construct</strong>(string $name, <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr> $logger)</code>
     </h3>
     <div class="details">
         <p>
@@ -100,8 +98,8 @@
                     <table>
                     <tr>
                 <td>string</td>
-                <td>$prefix</td>
-                <td>The message prefix.</td>
+                <td>$name</td>
+                <td>The sub-logger name.</td>
             </tr>
                     <tr>
                 <td><abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr></td>
@@ -116,14 +114,13 @@
                     </div>
     </div>
 
-                <h3 id="method_prefix">
-        <div class="location">at line 37</div>
+                <h3 id="method_name">
+        <div class="location">at line 39</div>
         <code>            public            string
-    <strong>prefix</strong>()</code>
+    <strong>name</strong>()</code>
     </h3>
     <div class="details">
-        <p>
-</p>
+        <p>Get the sub-logger name.</p>
         <p>
 </p>
         <div class="tags">
@@ -133,7 +130,7 @@
                     <table>
         <tr>
             <td>string</td>
-            <td>The message prefix</td>
+            <td>The sub-logger name.</td>
         </tr>
     </table>
 
@@ -143,13 +140,12 @@
     </div>
 
                 <h3 id="method_logger">
-        <div class="location">at line 45</div>
+        <div class="location">at line 49</div>
         <code>            public            <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr>
     <strong>logger</strong>()</code>
     </h3>
     <div class="details">
-        <p>
-</p>
+        <p>Get the target logger.</p>
         <p>
 </p>
         <div class="tags">
@@ -169,12 +165,12 @@
     </div>
 
                 <h3 id="method_log">
-        <div class="location">at line 57</div>
+        <div class="location">at line 61</div>
         <code>            public            
     <strong>log</strong>(mixed $level, string $message, array $context = array())</code>
     </h3>
     <div class="details">
-        <p>Logs with an arbitrary level.</p>
+        <p>Log a message.</p>
         <p>
 </p>
         <div class="tags">
@@ -184,20 +180,17 @@
                     <tr>
                 <td>mixed</td>
                 <td>$level</td>
-                <td>
-</td>
+                <td>The log level.</td>
             </tr>
                     <tr>
                 <td>string</td>
                 <td>$message</td>
-                <td>
-</td>
+                <td>The message to log.</td>
             </tr>
                     <tr>
                 <td>array</td>
                 <td>$context</td>
-                <td>
-</td>
+                <td>Additional contextual information.</td>
             </tr>
             </table>
 

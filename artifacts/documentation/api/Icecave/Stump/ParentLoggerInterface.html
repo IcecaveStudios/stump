@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="index, follow, all" />
-        <title>Icecave\Stump\PrefixableInterface | icecave/stump API</title>
+        <title>Icecave\Stump\ParentLoggerInterface | icecave/stump API</title>
                     <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
                             </head>
         <body id="class">
@@ -19,11 +19,16 @@
         <div id="title">icecave/stump API</div>
 
             <div class="type">Interface</div>
-    <h1><a href="../../Icecave/Stump.html">Icecave\Stump</a>\PrefixableInterface</h1>
+    <h1><a href="../../Icecave/Stump.html">Icecave\Stump</a>\ParentLoggerInterface</h1>
     </div>
         <div class="content">
-                <p>interface    <strong>PrefixableInterface</strong></p>
+                <p>interface    <strong>ParentLoggerInterface</strong></p>
 
+            <div class="description">
+            <p>Interface for loggers that support creation of sub-loggers.</p>
+            <p>
+</p>
+        </div>
     
     
     
@@ -32,11 +37,11 @@
             <table>
                     <tr>
                 <td class="type">
-                    <abbr title="Icecave\Stump\LoggerInterface">LoggerInterface</abbr>
+                    <a href="../../Icecave/Stump/SubLogger.html"><abbr title="Icecave\Stump\SubLogger">SubLogger</abbr></a>
                 </td>
                 <td class="last">
-                    <a href="#method_prefixWith">prefixWith</a>(string $prefix, string $separator = &#039;.&#039;)
-                    <p>Create a logger that logs with the given prefix.</p>
+                    <a href="#method_createSubLogger">createSubLogger</a>(string $name)
+                    <p>Create a sub-logger that targets this logger.</p>
                 </td>
                 <td></td>
             </tr>
@@ -45,13 +50,13 @@
 
         <h2>Details</h2>
 
-                        <h3 id="method_prefixWith">
-        <div class="location">at line 14</div>
-        <code>            public            <abbr title="Icecave\Stump\LoggerInterface">LoggerInterface</abbr>
-    <strong>prefixWith</strong>(string $prefix, string $separator = &#039;.&#039;)</code>
+                        <h3 id="method_createSubLogger">
+        <div class="location">at line 16</div>
+        <code>            public            <a href="../../Icecave/Stump/SubLogger.html"><abbr title="Icecave\Stump\SubLogger">SubLogger</abbr></a>
+    <strong>createSubLogger</strong>(string $name)</code>
     </h3>
     <div class="details">
-        <p>Create a logger that logs with the given prefix.</p>
+        <p>Create a sub-logger that targets this logger.</p>
         <p>
 </p>
         <div class="tags">
@@ -60,15 +65,8 @@
                     <table>
                     <tr>
                 <td>string</td>
-                <td>$prefix</td>
-                <td>
-</td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$separator</td>
-                <td>
-</td>
+                <td>$name</td>
+                <td>The sub-logger name.</td>
             </tr>
             </table>
 
@@ -77,9 +75,8 @@
 
                     <table>
         <tr>
-            <td><abbr title="Icecave\Stump\LoggerInterface">LoggerInterface</abbr></td>
-            <td>
-</td>
+            <td><a href="../../Icecave/Stump/SubLogger.html"><abbr title="Icecave\Stump\SubLogger">SubLogger</abbr></a></td>
+            <td>A sub-logger with the given name.</td>
         </tr>
     </table>
 

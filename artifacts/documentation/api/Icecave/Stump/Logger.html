@@ -23,7 +23,7 @@
     </div>
         <div class="content">
                 <p>class    <strong>Logger</strong>        implements
-        <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr>, <a href="../../Icecave/Stump/PrefixableInterface.html"><abbr title="Icecave\Stump\PrefixableInterface">PrefixableInterface</abbr></a></p>
+        <abbr title="Psr\Log\LoggerInterface">LoggerInterface</abbr>, <a href="../../Icecave/Stump/ParentLoggerInterface.html"><abbr title="Icecave\Stump\ParentLoggerInterface">ParentLoggerInterface</abbr></a></p>
 
             <div class="description">
             <p>A very simple PSR-3 logger implementation that writes to STDOUT.</p>
@@ -73,7 +73,7 @@
         <h2>Details</h2>
 
                         <h3 id="method___construct">
-        <div class="location">at line 23</div>
+        <div class="location">at line 25</div>
         <code>            public            
     <strong>__construct</strong>($minimumLogLevel = LogLevel::DEBUG, $fileName = &#039;php://stdout&#039;, $dateFormat = &#039;Y-m-d H:i:s&#039;)</code>
     </h3>
@@ -113,7 +113,7 @@
     </div>
 
                 <h3 id="method_log">
-        <div class="location">at line 40</div>
+        <div class="location">at line 42</div>
         <code>            public            
     <strong>log</strong>(mixed $level, string $message, array $context = array())</code>
     </h3>
@@ -149,7 +149,7 @@
     </div>
 
                 <h3 id="method_substitutePlaceholders">
-        <div class="location">at line 80</div>
+        <div class="location">at line 82</div>
         <code>            public            string
     <strong>substitutePlaceholders</strong>(string $message, array $context)</code>
     </h3>
