@@ -13,11 +13,12 @@ class Logger implements LoggerInterface, PrefixableInterface
 {
     use IsolatorTrait;
     use LoggerTrait;
+    use PrefixableTrait;
 
     /**
      * @param string $minimumLogLevel The minimum log level to include in the output.
-     * @param string $dateFormat The format specifier to use for outputting dates.
-     * @param string $fileName The target filename.
+     * @param string $dateFormat      The format specifier to use for outputting dates.
+     * @param string $fileName        The target filename.
      */
     public function __construct(
         $minimumLogLevel = LogLevel::DEBUG,
@@ -27,18 +28,6 @@ class Logger implements LoggerInterface, PrefixableInterface
         $this->minimumLogLevel = self::$levels[$minimumLogLevel];
         $this->dateFormat = $dateFormat;
         $this->fileName = $fileName;
-    }
-
-    /**
-     * Create a logger that logs with the given prefix.
-     *
-     * @param string $prefix
-     *
-     * @return LoggerInterface
-     */
-    public function prefixWith($prefix)
-    {
-        return new PrefixLogger($prefix, $this);
     }
 
     /**
@@ -83,7 +72,7 @@ class Logger implements LoggerInterface, PrefixableInterface
     /**
      * Substitute PSR-3 style placeholders in a message.
      *
-     * @param string $message The message template.
+     * @param string               $message The message template.
      * @param array<string, mixed> $context The placeholder values.
      *
      * @return string The message template with placeholder values substituted.

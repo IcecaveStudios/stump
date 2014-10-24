@@ -1,7 +1,7 @@
 <?php
 namespace Icecave\Stump;
 
-interface PrefixableInterface
+trait PrefixableTrait
 {
     /**
      * Create a logger that logs with the given prefix.
@@ -11,5 +11,8 @@ interface PrefixableInterface
      *
      * @return LoggerInterface
      */
-    public function prefixWith($prefix, $separator = '.');
+    public function prefixWith($prefix, $separator = '.')
+    {
+        return new PrefixLogger($prefix . $separator, $this);
+    }
 }
