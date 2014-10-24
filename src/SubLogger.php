@@ -7,39 +7,43 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 
 /**
- * A logger that prefixes all messages with a fixed string.
+ * A logger that prepends its name to all messages.
  */
-class PrefixLogger implements
+class SubLogger implements
     LoggerAwareInterface,
     LoggerInterface,
-    PrefixableInterface
+    ParentLoggerInterface
 {
     use LoggerAwareTrait;
     use LoggerTrait;
-    use PrefixableTrait;
+    use ParentLoggerTrait;
 
     /**
-     * @param string          $prefix The message prefix.
+     * @param string          $name   The sub-logger name.
      * @param LoggerInterface $logger The target logger.
      */
     public function __construct(
-        $prefix,
+        $name,
         LoggerInterface $logger
     ) {
-        $this->prefix = $prefix;
+        $this->name = $name;
 
         $this->setLogger($logger);
     }
 
     /**
-     * @return string The message prefix
+     * Get the sub-logger name.
+     *
+     * @return string The sub-logger name.
      */
-    public function prefix()
+    public function name()
     {
-        return $this->prefix;
+        return $this->name;
     }
 
     /**
+     * Get the target logger.
+     *
      * @return LoggerInterface The target logger.
      */
     public function logger()
@@ -48,16 +52,16 @@ class PrefixLogger implements
     }
 
     /**
-     * Logs with an arbitrary level.
+     * Log a message.
      *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
+     * @param mixed  $level   The log level.
+     * @param string $message The message to log.
+     * @param array  $context Additional contextual information.
      */
     public function log($level, $message, array $context = [])
     {
-        $this->logger->log($level, $this->prefix . $message, $context);
+        $this->logger->log($level, $this->name . ': ' . $message, $context);
     }
 
-    private $prefix;
+    private $name;
 }

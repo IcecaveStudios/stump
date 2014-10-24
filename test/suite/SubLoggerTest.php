@@ -6,23 +6,23 @@ use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class PrefixLoggerTest extends PHPUnit_Framework_TestCase
+class SubLoggerTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->targetLogger = Phake::mock('Psr\Log\LoggerInterface');
 
-        $this->logger = new PrefixLogger(
-            'The Prefix: ',
+        $this->logger = new SubLogger(
+            'sub-logger-name',
             $this->targetLogger
         );
     }
 
-    public function testPrefix()
+    public function testName()
     {
         $this->assertSame(
-            'The Prefix: ',
-            $this->logger->prefix()
+            'sub-logger-name',
+            $this->logger->name()
         );
     }
 
@@ -42,7 +42,7 @@ class PrefixLoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->targetLogger)->log(
             LogLevel::ERROR,
-            'The Prefix: The message!',
+            'sub-logger-name: The message!',
             $context
         );
     }

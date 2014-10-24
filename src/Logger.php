@@ -9,11 +9,13 @@ use Psr\Log\LogLevel;
 /**
  * A very simple PSR-3 logger implementation that writes to STDOUT.
  */
-class Logger implements LoggerInterface, PrefixableInterface
+class Logger implements
+    LoggerInterface,
+    ParentLoggerInterface
 {
     use IsolatorTrait;
     use LoggerTrait;
-    use PrefixableTrait;
+    use ParentLoggerTrait;
 
     /**
      * @param string $minimumLogLevel The minimum log level to include in the output.
