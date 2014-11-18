@@ -2,9 +2,9 @@
 namespace Icecave\Stump;
 
 use Icecave\Isolator\IsolatorTrait;
+use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
-use Psr\Log\LogLevel;
 
 /**
  * A very simple PSR-3 logger implementation that writes to STDOUT.
@@ -28,8 +28,8 @@ class Logger implements
         $dateFormat = 'Y-m-d H:i:s'
     ) {
         $this->minimumLogLevel = self::$levels[$minimumLogLevel];
-        $this->dateFormat = $dateFormat;
-        $this->fileName = $fileName;
+        $this->dateFormat      = $dateFormat;
+        $this->fileName        = $fileName;
     }
 
     /**
@@ -60,9 +60,9 @@ class Logger implements
             ->fwrite(
                 $this->stream,
                 sprintf(
-                    '%s %s: %s' . PHP_EOL,
-                    strtoupper($level),
+                    '%s %s %s' . PHP_EOL,
                     $dateTime,
+                    self::$levelText[$level],
                     $this->substitutePlaceholders(
                         $message,
                         $context
@@ -79,7 +79,7 @@ class Logger implements
      *
      * @return string The message template with placeholder values substituted.
      */
-    public function substitutePlaceholders($message, array $context)
+    private function substitutePlaceholders($message, array $context)
     {
         if (false === strpos($message, '{')) {
             return $message;
@@ -102,6 +102,17 @@ class Logger implements
         LogLevel::NOTICE    => 2,
         LogLevel::INFO      => 1,
         LogLevel::DEBUG     => 0,
+    ];
+
+    private static $levelText = [
+        LogLevel::EMERGENCY => 'EMER',
+        LogLevel::ALERT     =>     'ALRT',
+        LogLevel::CRITICAL  =>  'CRIT',
+        LogLevel::ERROR     =>     'ERRO',
+        LogLevel::WARNING   =>   'WARN',
+        LogLevel::NOTICE    =>    'NOTC',
+        LogLevel::INFO      =>      'INFO',
+        LogLevel::DEBUG     =>     'DEBG',
     ];
 
     private $minimumLogLevel;
