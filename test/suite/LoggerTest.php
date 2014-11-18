@@ -2,8 +2,8 @@
 namespace Icecave\Stump;
 
 use Icecave\Isolator\Isolator;
-use Phake;
 use PHPUnit_Framework_TestCase;
+use Phake;
 use Psr\Log\LogLevel;
 
 class LoggerTest extends PHPUnit_Framework_TestCase
@@ -11,7 +11,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->isolator = Phake::mock('Icecave\Isolator\Isolator');
-        $this->minimumLogLevel = LogLevel::INFO;
 
         Phake::when($this->isolator)
             ->fopen(Phake::anyParameters())
@@ -21,16 +20,19 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->date(Phake::anyParameters())
             ->thenReturn('<date>');
 
-        $this->logger = new Logger($this->minimumLogLevel);
+        $this->logger = new Logger;
 
         $this->logger->setIsolator($this->isolator);
     }
 
-    public function testLog()
+    /**
+     * @dataProvider logTestVectors
+     */
+    public function testLog($logLevel, $logLevelText)
     {
         $this->logger->log(
-            LogLevel::WARNING,
-            'Warning message.'
+            $logLevel,
+            'Test message.'
         );
 
         Phake::verify($this->isolator)->fopen(
@@ -40,8 +42,22 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            'WARNING <date>: Warning message.' . PHP_EOL
+            '<date> ' . $logLevelText . ' Test message.' . PHP_EOL
         );
+    }
+
+    public function logTestVectors()
+    {
+        return [
+            [LogLevel::EMERGENCY, 'EMER'],
+            [LogLevel::ALERT,     'ALRT'],
+            [LogLevel::CRITICAL,  'CRIT'],
+            [LogLevel::ERROR,     'ERRO'],
+            [LogLevel::WARNING,   'WARN'],
+            [LogLevel::NOTICE,    'NOTC'],
+            [LogLevel::INFO,      'INFO'],
+            [LogLevel::DEBUG,     'DEBG'],
+        ];
     }
 
     public function testLogWithPlaceholderValues()
@@ -57,12 +73,14 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            'INFO <date>: Foo: FOO, F: F, Missing: {missing}' . PHP_EOL
+            '<date> INFO Foo: FOO, F: F, Missing: {missing}' . PHP_EOL
         );
     }
 
     public function testLogIgnoresLowLogLevel()
     {
+        $this->logger = new Logger(LogLevel::INFO);
+
         $this->logger->debug('This should not be logged.');
 
         Phake::verifyNoInteraction($this->isolator);

@@ -1,10 +1,10 @@
 <?php
 namespace Icecave\Stump;
 
-use Phake;
 use PHPUnit_Framework_TestCase;
-use Psr\Log\LoggerInterface;
+use Phake;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 
 class SubLoggerTest extends PHPUnit_Framework_TestCase
 {
