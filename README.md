@@ -23,7 +23,7 @@ $logger->info("It's better than bad... it's good!");
 The output of the example above is:
 
 ```
-INFO 2014-10-24 16:26:13: It's better than bad... it's good!
+2014-10-24 16:26:13 INFO It's better than bad... it's good!
 ```
 
 ## Contact us
