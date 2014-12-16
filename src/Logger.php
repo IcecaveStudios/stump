@@ -77,7 +77,7 @@ class Logger implements
             $hash = spl_object_hash($context['exception']);
 
             $traceLines = explode(
-                "\n",
+                PHP_EOL,
                 $context['exception']->getTraceAsString()
             );
 

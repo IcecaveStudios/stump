@@ -113,7 +113,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         );
 
         $traceLines = explode(
-            "\n",
+            PHP_EOL,
             $exception->getTraceAsString()
         );
         foreach ($traceLines as $line) {
