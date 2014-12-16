@@ -1,8 +1,8 @@
 <?php
 namespace Icecave\Stump;
 
-use PHPUnit_Framework_TestCase;
 use Phake;
+use PHPUnit_Framework_TestCase;
 
 class ParentLoggerTraitTest extends PHPUnit_Framework_TestCase
 {

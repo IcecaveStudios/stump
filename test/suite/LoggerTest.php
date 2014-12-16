@@ -1,9 +1,10 @@
 <?php
 namespace Icecave\Stump;
 
+use Exception;
 use Icecave\Isolator\Isolator;
-use PHPUnit_Framework_TestCase;
 use Phake;
+use PHPUnit_Framework_TestCase;
 use Psr\Log\LogLevel;
 
 class LoggerTest extends PHPUnit_Framework_TestCase
@@ -92,5 +93,34 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $this->logger->info('two');
 
         Phake::verify($this->isolator, Phake::times(1))->fopen(Phake::anyParameters());
+    }
+
+    public function testLogException()
+    {
+        $exception = new Exception('Test exception.');
+        $hash      = spl_object_hash($exception);
+
+        $this->logger->error(
+            'Some test error: {exception}',
+            [
+                'exception' => $exception
+            ]
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> ERRO Some test error: ' . strval($exception) . PHP_EOL
+        );
+
+        $traceLines = explode(
+            "\n",
+            $exception->getTraceAsString()
+        );
+        foreach ($traceLines as $line) {
+            Phake::verify($this->isolator)->fwrite(
+                '<resource>',
+                '<date> ERRO [' . $hash . '] ' . $line . PHP_EOL
+            );
+        }
     }
 }

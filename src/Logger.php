@@ -1,10 +1,11 @@
 <?php
 namespace Icecave\Stump;
 
+use Exception;
 use Icecave\Isolator\IsolatorTrait;
-use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
 
 /**
  * A very simple PSR-3 logger implementation that writes to STDOUT.
@@ -69,6 +70,24 @@ class Logger implements
                     )
                 )
             );
+
+        if (isset($context['exception']) &&
+            $context['exception'] instanceof Exception
+        ) {
+            $hash = spl_object_hash($context['exception']);
+
+            $traceLines = explode(
+                "\n",
+                $context['exception']->getTraceAsString()
+            );
+
+            foreach ($traceLines as $line) {
+                $this->log(
+                    $level,
+                    '[' . $hash . '] ' . $line
+                );
+            }
+        }
     }
 
     /**
@@ -106,13 +125,13 @@ class Logger implements
 
     private static $levelText = [
         LogLevel::EMERGENCY => 'EMER',
-        LogLevel::ALERT     =>     'ALRT',
-        LogLevel::CRITICAL  =>  'CRIT',
-        LogLevel::ERROR     =>     'ERRO',
-        LogLevel::WARNING   =>   'WARN',
-        LogLevel::NOTICE    =>    'NOTC',
-        LogLevel::INFO      =>      'INFO',
-        LogLevel::DEBUG     =>     'DEBG',
+        LogLevel::ALERT     => 'ALRT',
+        LogLevel::CRITICAL  => 'CRIT',
+        LogLevel::ERROR     => 'ERRO',
+        LogLevel::WARNING   => 'WARN',
+        LogLevel::NOTICE    => 'NOTC',
+        LogLevel::INFO      => 'INFO',
+        LogLevel::DEBUG     => 'DEBG',
     ];
 
     private $minimumLogLevel;
