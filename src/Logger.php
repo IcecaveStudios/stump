@@ -79,7 +79,8 @@ class Logger implements
                 )
             );
 
-        if (isset($context['exception'])
+        if (
+            isset($context['exception'])
             && $context['exception'] instanceof Exception
         ) {
             $this->logException(
