@@ -21,7 +21,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->date(Phake::anyParameters())
             ->thenReturn('<date>');
 
-        $this->exceptionRenderer = Phake::mock(ExceptionRendererInterface::class);
+        $this->exceptionRenderer = Phake::mock('Icecave\Stump\ExceptionRendererInterface');
 
         Phake::when($this->exceptionRenderer)
             ->render(Phake::anyParameters())
