@@ -1,10 +1,11 @@
 <?php
 namespace Icecave\Stump;
 
+use Exception;
 use Icecave\Isolator\IsolatorTrait;
-use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
 
 /**
  * A very simple PSR-3 logger implementation that writes to STDOUT.
@@ -18,18 +19,26 @@ class Logger implements
     use ParentLoggerTrait;
 
     /**
-     * @param string $minimumLogLevel The minimum log level to include in the output.
-     * @param string $dateFormat      The format specifier to use for outputting dates.
-     * @param string $fileName        The target filename.
+     * @param string                          $minimumLogLevel   The minimum log level to include in the output.
+     * @param string                          $dateFormat        The format specifier to use for outputting dates.
+     * @param string                          $fileName          The target filename.
+     * @param ExceptionRendererInterface|null $exceptionRenderer The exception renderer to use.
      */
     public function __construct(
         $minimumLogLevel = LogLevel::DEBUG,
         $fileName = 'php://stdout',
-        $dateFormat = 'Y-m-d H:i:s'
+        $dateFormat = 'Y-m-d H:i:s',
+        ExceptionRendererInterface $exceptionRenderer = null
     ) {
-        $this->minimumLogLevel = self::$levels[$minimumLogLevel];
-        $this->dateFormat      = $dateFormat;
-        $this->fileName        = $fileName;
+        if (null === $exceptionRenderer) {
+            $exceptionRenderer = new ExceptionRenderer();
+        }
+
+        $this->minimumLogLevel   = self::$levels[$minimumLogLevel];
+        $this->dateFormat        = $dateFormat;
+        $this->fileName          = $fileName;
+        $this->exceptionRenderer = $exceptionRenderer;
+        $this->exceptionCount    = 0;
     }
 
     /**
@@ -69,6 +78,15 @@ class Logger implements
                     )
                 )
             );
+
+        if (
+            isset($context['exception'])
+            && $context['exception'] instanceof Exception
+        ) {
+            $this->logException(
+                $context['exception']
+            );
+        }
     }
 
     /**
@@ -93,6 +111,38 @@ class Logger implements
         return strtr($message, $replacements);
     }
 
+    /**
+     * Log an exception including the stack trace.
+     *
+     * @param Exception $exception The exception to log.
+     */
+    private function logException(Exception $exception)
+    {
+        $this->exceptionCount++;
+
+        $lines = explode(
+            PHP_EOL,
+            $this->exceptionRenderer->render($exception)
+        );
+
+        foreach ($lines as $line) {
+            $line = rtrim($line);
+
+            if (empty($line)) {
+                continue;
+            }
+
+            $this->log(
+                LogLevel::DEBUG,
+                sprintf(
+                    '[exception %s] %s',
+                    $this->exceptionCount,
+                    $line
+                )
+            );
+        }
+    }
+
     private static $levels = [
         LogLevel::EMERGENCY => 7,
         LogLevel::ALERT     => 6,
@@ -106,17 +156,19 @@ class Logger implements
 
     private static $levelText = [
         LogLevel::EMERGENCY => 'EMER',
-        LogLevel::ALERT     =>     'ALRT',
-        LogLevel::CRITICAL  =>  'CRIT',
-        LogLevel::ERROR     =>     'ERRO',
-        LogLevel::WARNING   =>   'WARN',
-        LogLevel::NOTICE    =>    'NOTC',
-        LogLevel::INFO      =>      'INFO',
-        LogLevel::DEBUG     =>     'DEBG',
+        LogLevel::ALERT     => 'ALRT',
+        LogLevel::CRITICAL  => 'CRIT',
+        LogLevel::ERROR     => 'ERRO',
+        LogLevel::WARNING   => 'WARN',
+        LogLevel::NOTICE    => 'NOTC',
+        LogLevel::INFO      => 'INFO',
+        LogLevel::DEBUG     => 'DEBG',
     ];
 
     private $minimumLogLevel;
     private $dateFormat;
     private $fileName;
+    private $exceptionRenderer;
+    private $exceptionCount;
     private $stream;
 }

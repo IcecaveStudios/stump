@@ -1,9 +1,10 @@
 <?php
 namespace Icecave\Stump;
 
+use Exception;
 use Icecave\Isolator\Isolator;
-use PHPUnit_Framework_TestCase;
 use Phake;
+use PHPUnit_Framework_TestCase;
 use Psr\Log\LogLevel;
 
 class LoggerTest extends PHPUnit_Framework_TestCase
@@ -20,7 +21,22 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->date(Phake::anyParameters())
             ->thenReturn('<date>');
 
-        $this->logger = new Logger;
+        $this->exceptionRenderer = Phake::mock('Icecave\Stump\ExceptionRendererInterface');
+
+        Phake::when($this->exceptionRenderer)
+            ->render(Phake::anyParameters())
+            ->thenReturn(
+                '<the-rendered-exception-line-1>' . PHP_EOL .
+                PHP_EOL .
+                '<the-rendered-exception-line-2>' . PHP_EOL
+            );
+
+        $this->logger = new Logger(
+            LogLevel::DEBUG,
+            'php://stdout',
+            'Y-m-d H:i:s',
+            $this->exceptionRenderer
+        );
 
         $this->logger->setIsolator($this->isolator);
     }
@@ -92,5 +108,36 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $this->logger->info('two');
 
         Phake::verify($this->isolator, Phake::times(1))->fopen(Phake::anyParameters());
+    }
+
+    public function testLogException()
+    {
+        $exception = new Exception('Some exception.');
+
+        $this->logger->error(
+            'Some test error.',
+            [
+                'exception' => $exception
+            ]
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> ERRO Some test error.' . PHP_EOL
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> DEBG [exception 1] <the-rendered-exception-line-1>' . PHP_EOL
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> DEBG [exception 1] <the-rendered-exception-line-2>' . PHP_EOL
+        );
+
+        Phake::verify($this->exceptionRenderer)->render(
+            $exception
+        );
     }
 }
