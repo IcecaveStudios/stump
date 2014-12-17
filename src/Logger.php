@@ -19,18 +19,25 @@ class Logger implements
     use ParentLoggerTrait;
 
     /**
-     * @param string $minimumLogLevel The minimum log level to include in the output.
-     * @param string $dateFormat      The format specifier to use for outputting dates.
-     * @param string $fileName        The target filename.
+     * @param string                          $minimumLogLevel   The minimum log level to include in the output.
+     * @param string                          $dateFormat        The format specifier to use for outputting dates.
+     * @param string                          $fileName          The target filename.
+     * @param ExceptionRendererInterface|null $exceptionRenderer The exception renderer to use.
      */
     public function __construct(
         $minimumLogLevel = LogLevel::DEBUG,
         $fileName = 'php://stdout',
-        $dateFormat = 'Y-m-d H:i:s'
+        $dateFormat = 'Y-m-d H:i:s',
+        ExceptionRendererInterface $exceptionRenderer = null
     ) {
-        $this->minimumLogLevel = self::$levels[$minimumLogLevel];
-        $this->dateFormat      = $dateFormat;
-        $this->fileName        = $fileName;
+        if (null === $exceptionRenderer) {
+            $exceptionRenderer = new ExceptionRenderer();
+        }
+
+        $this->minimumLogLevel   = self::$levels[$minimumLogLevel];
+        $this->dateFormat        = $dateFormat;
+        $this->fileName          = $fileName;
+        $this->exceptionRenderer = $exceptionRenderer;
     }
 
     /**
@@ -71,22 +78,13 @@ class Logger implements
                 )
             );
 
-        if (isset($context['exception']) &&
-            $context['exception'] instanceof Exception
+        if (isset($context['exception'])
+            && $context['exception'] instanceof Exception
         ) {
-            $hash = spl_object_hash($context['exception']);
-
-            $traceLines = explode(
-                PHP_EOL,
-                $context['exception']->getTraceAsString()
+            $this->logException(
+                $level,
+                $context['exception']
             );
-
-            foreach ($traceLines as $line) {
-                $this->log(
-                    $level,
-                    '[' . $hash . '] ' . $line
-                );
-            }
         }
     }
 
@@ -110,6 +108,39 @@ class Logger implements
         }
 
         return strtr($message, $replacements);
+    }
+
+    /**
+     * Log an exception including the stack trace.
+     *
+     * @param mixed     $level     The log level.
+     * @param Exception $exception The exception to log.
+     */
+    private function logException($level, Exception $exception)
+    {
+        $hash = spl_object_hash($exception);
+
+        $lines = explode(
+            PHP_EOL,
+            $this->exceptionRenderer->render($exception)
+        );
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            if (empty($line)) {
+                continue;
+            }
+
+            $this->log(
+                $level,
+                sprintf(
+                    '[trace %s] %s',
+                    $hash,
+                    $line
+                )
+            );
+        }
     }
 
     private static $levels = [
@@ -137,5 +168,6 @@ class Logger implements
     private $minimumLogLevel;
     private $dateFormat;
     private $fileName;
+    private $exceptionRenderer;
     private $stream;
 }

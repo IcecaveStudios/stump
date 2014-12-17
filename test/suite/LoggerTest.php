@@ -21,7 +21,22 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->date(Phake::anyParameters())
             ->thenReturn('<date>');
 
-        $this->logger = new Logger;
+        $this->exceptionRenderer = Phake::mock(ExceptionRendererInterface::class);
+
+        Phake::when($this->exceptionRenderer)
+            ->render(Phake::anyParameters())
+            ->thenReturn(
+                '<the-rendered-exception-line-1>' . PHP_EOL .
+                PHP_EOL .
+                '<the-rendered-exception-line-2>' . PHP_EOL
+            );
+
+        $this->logger = new Logger(
+            LogLevel::DEBUG,
+            'php://stdout',
+            'Y-m-d H:i:s',
+            $this->exceptionRenderer
+        );
 
         $this->logger->setIsolator($this->isolator);
     }
@@ -97,11 +112,11 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
     public function testLogException()
     {
-        $exception = new Exception('Test exception.');
+        $exception = new Exception('Some exception.');
         $hash      = spl_object_hash($exception);
 
         $this->logger->error(
-            'Some test error: {exception}',
+            'Some test error.',
             [
                 'exception' => $exception
             ]
@@ -109,18 +124,21 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            '<date> ERRO Some test error: ' . strval($exception) . PHP_EOL
+            '<date> ERRO Some test error.' . PHP_EOL
         );
 
-        $traceLines = explode(
-            PHP_EOL,
-            $exception->getTraceAsString()
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> ERRO [trace ' . $hash . '] <the-rendered-exception-line-1>' . PHP_EOL
         );
-        foreach ($traceLines as $line) {
-            Phake::verify($this->isolator)->fwrite(
-                '<resource>',
-                '<date> ERRO [' . $hash . '] ' . $line . PHP_EOL
-            );
-        }
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> ERRO [trace ' . $hash . '] <the-rendered-exception-line-2>' . PHP_EOL
+        );
+
+        Phake::verify($this->exceptionRenderer)->render(
+            $exception
+        );
     }
 }
