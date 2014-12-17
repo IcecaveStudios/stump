@@ -16,14 +16,10 @@ class ExceptionRenderer implements ExceptionRendererInterface
         $renderException = $exception;
         while ($renderException) {
             $rendered[]      = $this->renderException($renderException);
-            $rootCause       = $renderException->getMessage();
             $renderException = $renderException->getPrevious();
         }
 
-        $string  = 'MESSAGE: ' . $exception->getMessage() . PHP_EOL;
-        $string .= 'CAUSE: ' . $rootCause . PHP_EOL;
-        $string .= PHP_EOL . PHP_EOL;
-        $string .= implode(PHP_EOL, $rendered);
+        $string = implode(PHP_EOL, $rendered);
 
         return trim($string);
     }
@@ -35,13 +31,21 @@ class ExceptionRenderer implements ExceptionRendererInterface
      */
     private function renderException(Exception $exception)
     {
-        $string  = 'TYPE: ' . get_class($exception) . PHP_EOL;
-        $string .= 'MESSAGE: ' . $exception->getMessage() . PHP_EOL;
-        $string .= 'FILE: ' . $exception->getFile() . PHP_EOL;
-        $string .= 'LINE: ' . $exception->getLine() . PHP_EOL;
-        $string .= 'CODE: ' . $exception->getCode() . PHP_EOL;
-        $string .= 'TRACE:' . PHP_EOL;
-        $string .= $exception->getTraceAsString() . PHP_EOL;
+        $string  = 'Message: ' . $exception->getMessage() . PHP_EOL;
+        $string .= 'Code:    ' . $exception->getCode() . PHP_EOL;
+        $string .= 'Type:    ' . get_class($exception) . PHP_EOL;
+
+        $string .= sprintf(
+            'Source:  %s:%d' . PHP_EOL,
+            $exception->getFile(),
+            $exception->getLine()
+        );
+
+        $trace = explode(PHP_EOL, $exception->getTraceAsString());
+        foreach ($trace as $line) {
+            $string .= '    ' . $line . PHP_EOL;
+        }
+
         $string .= PHP_EOL;
 
         return $string;

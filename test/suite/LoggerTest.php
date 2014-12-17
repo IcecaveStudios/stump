@@ -113,7 +113,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     public function testLogException()
     {
         $exception = new Exception('Some exception.');
-        $hash      = spl_object_hash($exception);
 
         $this->logger->error(
             'Some test error.',
@@ -129,12 +128,12 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            '<date> ERRO [trace ' . $hash . '] <the-rendered-exception-line-1>' . PHP_EOL
+            '<date> DEBG [exception 1] <the-rendered-exception-line-1>' . PHP_EOL
         );
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            '<date> ERRO [trace ' . $hash . '] <the-rendered-exception-line-2>' . PHP_EOL
+            '<date> DEBG [exception 1] <the-rendered-exception-line-2>' . PHP_EOL
         );
 
         Phake::verify($this->exceptionRenderer)->render(

@@ -38,6 +38,7 @@ class Logger implements
         $this->dateFormat        = $dateFormat;
         $this->fileName          = $fileName;
         $this->exceptionRenderer = $exceptionRenderer;
+        $this->exceptionCount    = 0;
     }
 
     /**
@@ -82,7 +83,6 @@ class Logger implements
             && $context['exception'] instanceof Exception
         ) {
             $this->logException(
-                $level,
                 $context['exception']
             );
         }
@@ -113,12 +113,11 @@ class Logger implements
     /**
      * Log an exception including the stack trace.
      *
-     * @param mixed     $level     The log level.
      * @param Exception $exception The exception to log.
      */
-    private function logException($level, Exception $exception)
+    private function logException(Exception $exception)
     {
-        $hash = spl_object_hash($exception);
+        $this->exceptionCount++;
 
         $lines = explode(
             PHP_EOL,
@@ -126,17 +125,17 @@ class Logger implements
         );
 
         foreach ($lines as $line) {
-            $line = trim($line);
+            $line = rtrim($line);
 
             if (empty($line)) {
                 continue;
             }
 
             $this->log(
-                $level,
+                LogLevel::DEBUG,
                 sprintf(
-                    '[trace %s] %s',
-                    $hash,
+                    '[exception %s] %s',
+                    $this->exceptionCount,
                     $line
                 )
             );
@@ -169,5 +168,6 @@ class Logger implements
     private $dateFormat;
     private $fileName;
     private $exceptionRenderer;
+    private $exceptionCount;
     private $stream;
 }
