@@ -2,31 +2,30 @@
 namespace Icecave\Stump;
 
 use Exception;
+use Icecave\Chrono\Clock\ClockInterface;
 use Icecave\Isolator\IsolatorTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
 
-/**
- * A very simple PSR-3 logger implementation that writes to STDOUT.
- */
-class Logger implements
-    LoggerInterface,
-    ParentLoggerInterface
+class EmailLogger implements LoggerInterface
 {
     use IsolatorTrait;
     use LoggerTrait;
-    use ParentLoggerTrait;
 
     /**
+     * @param string                          $toAddress         The address to send the email to.
+     * @param string                          $fromAddress       The email sent from address.
+     * @param string                          $subjectTag        The tag to include in the email subject.
      * @param string                          $minimumLogLevel   The minimum log level to include in the output.
-     * @param string                          $fileName          The target filename.
      * @param string                          $dateFormat        The format specifier to use for outputting dates.
      * @param ExceptionRendererInterface|null $exceptionRenderer The exception renderer to use.
      */
     public function __construct(
+        $toAddress,
+        $fromAddress,
+        $subjectTag,
         $minimumLogLevel = LogLevel::DEBUG,
-        $fileName = 'php://stdout',
         $dateFormat = 'Y-m-d H:i:s',
         ExceptionRendererInterface $exceptionRenderer = null
     ) {
@@ -35,10 +34,11 @@ class Logger implements
         }
 
         $this->minimumLogLevel   = self::$levels[$minimumLogLevel];
+        $this->toAddress         = $toAddress;
+        $this->fromAddress       = $fromAddress;
+        $this->subjectTag        = $subjectTag;
         $this->dateFormat        = $dateFormat;
-        $this->fileName          = $fileName;
         $this->exceptionRenderer = $exceptionRenderer;
-        $this->exceptionCount    = 0;
     }
 
     /**
@@ -54,39 +54,34 @@ class Logger implements
             return;
         }
 
-        if (!$this->stream) {
-            $this->stream = $this
-                ->isolator()
-                ->fopen($this->fileName, 'w');
-        }
-
         $dateTime = $this
             ->isolator()
             ->date($this->dateFormat);
 
-        $this
-            ->isolator()
-            ->fwrite(
-                $this->stream,
-                sprintf(
-                    '%s %s %s' . PHP_EOL,
-                    $dateTime,
-                    self::$levelText[$level],
-                    $this->substitutePlaceholders(
-                        $message,
-                        $context
-                    )
-                )
-            );
+        $body = sprintf(
+            '%s %s %s' . PHP_EOL,
+            $dateTime,
+            self::$levelText[$level],
+            $this->substitutePlaceholders(
+                $message,
+                $context
+            )
+        );
 
         if (
             isset($context['exception'])
             && $context['exception'] instanceof Exception
         ) {
-            $this->renderException(
-                $context['exception']
-            );
+            $body .= PHP_EOL . PHP_EOL;
+            $body .= $this->exceptionRenderer->render($exception);
         }
+
+        $this->isolator()->mail(
+            $this->toAddress,
+            $this->subject($level, $message),
+            $body,
+            $this->headers()
+        );
     }
 
     /**
@@ -112,35 +107,32 @@ class Logger implements
     }
 
     /**
-     * Log an exception including the stack trace.
+     * @param mixed  $level   The log level.
+     * @param string $message The message to log.
      *
-     * @param Exception $exception The exception to log.
+     * @return string email subject.
      */
-    private function renderException(Exception $exception)
+    private function subject($level, $message)
     {
-        $this->exceptionCount++;
-
-        $lines = explode(
-            PHP_EOL,
-            $this->exceptionRenderer->render($exception)
+        return sprintf(
+            '[%s] %s %s',
+            $this->subjectTag,
+            self::$levelText[$level],
+            $message
         );
+    }
 
-        foreach ($lines as $line) {
-            $line = rtrim($line);
+    /**
+     * @return string email headers.
+     */
+    private function headers()
+    {
+        $headers = [
+            'From: ' . $this->fromAddress,
+            'Content-Type: text/plain',
+        ];
 
-            if (empty($line)) {
-                continue;
-            }
-
-            $this->log(
-                LogLevel::DEBUG,
-                sprintf(
-                    '[exception %s] %s',
-                    $this->exceptionCount,
-                    $line
-                )
-            );
-        }
+        return implode("\r\n", $headers);
     }
 
     private static $levels = [
@@ -165,10 +157,10 @@ class Logger implements
         LogLevel::DEBUG     => 'DEBG',
     ];
 
+    private $toAddress;
+    private $fromAddress;
+    private $subjectTag;
     private $minimumLogLevel;
     private $dateFormat;
-    private $fileName;
     private $exceptionRenderer;
-    private $exceptionCount;
-    private $stream;
 }
