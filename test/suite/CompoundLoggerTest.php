@@ -34,12 +34,14 @@ class CompoundLoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->logger1)->log(
             LogLevel::INFO,
-            'Test message.'
+            'Test message.',
+            []
         );
 
         Phake::verify($this->logger2)->log(
             LogLevel::INFO,
-            'Test message.'
+            'Test message.',
+            []
         );
     }
 
@@ -51,12 +53,14 @@ class CompoundLoggerTest extends PHPUnit_Framework_TestCase
 
         $this->compoundLogger->log(
             LogLevel::INFO,
-            'Test message.'
+            'Test message.',
+            []
         );
 
         Phake::verify($this->logger1)->log(
             LogLevel::INFO,
-            'Test message.'
+            'Test message.',
+            []
         );
 
         Phake::verifyNoInteraction($this->logger2);
@@ -68,7 +72,8 @@ class CompoundLoggerTest extends PHPUnit_Framework_TestCase
 
         $this->compoundLogger->log(
             LogLevel::INFO,
-            'Test message.'
+            'Test message.',
+            []
         );
 
         Phake::verifyNoInteraction($this->logger1);
@@ -87,7 +92,7 @@ class CompoundLoggerTest extends PHPUnit_Framework_TestCase
         );
 
         Phake::verify($this->logger1)->log(
-            LogLevel::INFO,
+            $logLevel,
             $logLevelText . ' Test message.',
             []
         );

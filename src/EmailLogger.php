@@ -54,6 +54,11 @@ class EmailLogger implements LoggerInterface
             return;
         }
 
+        $substituedMessage = $this->substitutePlaceholders(
+            $message,
+            $context
+        );
+
         $dateTime = $this
             ->isolator()
             ->date($this->dateFormat);
@@ -62,10 +67,7 @@ class EmailLogger implements LoggerInterface
             '%s %s %s' . PHP_EOL,
             $dateTime,
             self::$levelText[$level],
-            $this->substitutePlaceholders(
-                $message,
-                $context
-            )
+            $substituedMessage
         );
 
         if (
@@ -73,12 +75,12 @@ class EmailLogger implements LoggerInterface
             && $context['exception'] instanceof Exception
         ) {
             $body .= PHP_EOL . PHP_EOL;
-            $body .= $this->exceptionRenderer->render($exception);
+            $body .= $this->exceptionRenderer->render($context['exception']);
         }
 
         $this->isolator()->mail(
             $this->toAddress,
-            $this->subject($level, $message),
+            $this->subject($level, $substituedMessage),
             $body,
             $this->headers()
         );
