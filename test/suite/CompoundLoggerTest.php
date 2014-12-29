@@ -1,8 +1,6 @@
 <?php
 namespace Icecave\Stump;
 
-use Exception;
-use Icecave\Isolator\Isolator;
 use Phake;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LogLevel;

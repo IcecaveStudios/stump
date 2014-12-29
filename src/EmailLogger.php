@@ -2,7 +2,6 @@
 namespace Icecave\Stump;
 
 use Exception;
-use Icecave\Chrono\Clock\ClockInterface;
 use Icecave\Isolator\IsolatorTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
