@@ -6,7 +6,7 @@
 
 **Stump** is a simple PSR-3 compliant logger for [Twelve-Factor](http://12factor.net/) applications.
 
-* Install via [Composer](http://getcomposer.org) package [icecave/stump](https://packagist.org/packages/icecave/stump)
+* Install [icecave/stump](https://packagist.org/packages/icecave/stump) via [Composer](http://getcomposer.org): `composer require icecave/stump`
 * Read the [API documentation](http://icecavestudios.github.io/stump/artifacts/documentation/api/)
 
 ## Example
@@ -23,7 +23,7 @@ $logger->info("It's better than bad... it's good!");
 The output of the example above is:
 
 ```
-INFO 2014-10-24 16:26:13: It's better than bad... it's good!
+2014-10-24 16:26:13 INFO It's better than bad... it's good!
 ```
 
 ## Contact us
@@ -35,4 +35,4 @@ INFO 2014-10-24 16:26:13: It's better than bad... it's good!
 <!-- references -->
 [Build Status]: http://img.shields.io/travis/IcecaveStudios/stump/develop.svg?style=flat-square
 [Test Coverage]: http://img.shields.io/coveralls/IcecaveStudios/stump/develop.svg?style=flat-square
-[SemVer]: http://img.shields.io/:semver-0.3.0-yellow.svg?style=flat-square
+[SemVer]: http://img.shields.io/:semver-0.4.0-yellow.svg?style=flat-square
