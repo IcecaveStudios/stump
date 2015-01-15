@@ -1,5 +1,10 @@
 # Stump Changelog
 
+### 0.4.0 (2015-01-15)
+
+* **[NEW]** Added exception logging
+* **[BC]** Removed sub-logger functionality
+
 ### 0.3.0 (2014-11-19)
 
 * **[IMPROVED]** Improved readability of log output by moving the date to the start of the line and using a fixed-width log level string
