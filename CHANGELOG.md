@@ -1,5 +1,9 @@
 # Stump Changelog
 
+### 0.4.1 (2015-01-18)
+
+* **[FIXED]** Using the `{exception}` placeholder in a log message now correctly shows the exception message rather than the stack trace
+
 ### 0.4.0 (2015-01-15)
 
 * **[NEW]** Added exception logging
