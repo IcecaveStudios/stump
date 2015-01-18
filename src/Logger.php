@@ -102,7 +102,11 @@ class Logger implements LoggerInterface
 
         $replacements = [];
         foreach ($context as $key => $value) {
-            $replacements['{' . $key . '}'] = $value;
+            if ($key === 'exception' && $value instanceof Exception) {
+                $replacements['{' . $key . '}'] = $value->getMessage();
+            } else {
+                $replacements['{' . $key . '}'] = $value;
+            }
         }
 
         return strtr($message, $replacements);
