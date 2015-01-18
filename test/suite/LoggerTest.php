@@ -112,10 +112,10 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
     public function testLogException()
     {
-        $exception = new Exception('Some exception.');
+        $exception = new Exception('This is the exception message.');
 
         $this->logger->error(
-            'Some test error.',
+            'Some test error. Exception: {exception}',
             [
                 'exception' => $exception
             ]
@@ -123,7 +123,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
-            '<date> ERRO Some test error.' . PHP_EOL
+            '<date> ERRO Some test error. Exception: This is the exception message.' . PHP_EOL
         );
 
         Phake::verify($this->isolator)->fwrite(
