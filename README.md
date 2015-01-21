@@ -6,7 +6,7 @@
 
 **Stump** is a simple PSR-3 compliant logger for [Twelve-Factor](http://12factor.net/) applications.
 
-* Install [icecave/stump](https://packagist.org/packages/icecave/stump) via [Composer](http://getcomposer.org): `composer require icecave/stump`
+* Install via [Composer](http://getcomposer.org) package [icecave/stump](https://packagist.org/packages/icecave/stump)
 * Read the [API documentation](http://icecavestudios.github.io/stump/artifacts/documentation/api/)
 
 ## Example
