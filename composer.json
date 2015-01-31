@@ -26,6 +26,9 @@
     "require-dev": {
         "icecave/archer": "~1"
     },
+    "suggest": {
+        "ext-posix": "Allows for colorful log messages on TTYs."
+    },
     "autoload": {
         "psr-4": {
             "Icecave\\Stump\\": "src"

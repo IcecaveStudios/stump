@@ -1,5 +1,9 @@
 # Stump Changelog
 
+### 0.5.0 (2015-01-31)
+
+* **[NEW]** Added optional support for ANSI color codes
+
 ### 0.4.1 (2015-01-18)
 
 * **[FIXED]** Using the `{exception}` placeholder in a log message now correctly shows the exception message rather than the stack trace
