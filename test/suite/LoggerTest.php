@@ -3,8 +3,8 @@ namespace Icecave\Stump;
 
 use Exception;
 use Icecave\Isolator\Isolator;
-use Phake;
 use PHPUnit_Framework_TestCase;
+use Phake;
 use Psr\Log\LogLevel;
 
 class LoggerTest extends PHPUnit_Framework_TestCase
@@ -33,6 +33,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         $this->logger = new Logger(
             LogLevel::DEBUG,
+            null,
             'php://stdout',
             'Y-m-d H:i:s',
             $this->exceptionRenderer
@@ -62,20 +63,6 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function logTestVectors()
-    {
-        return [
-            [LogLevel::EMERGENCY, 'EMER'],
-            [LogLevel::ALERT,     'ALRT'],
-            [LogLevel::CRITICAL,  'CRIT'],
-            [LogLevel::ERROR,     'ERRO'],
-            [LogLevel::WARNING,   'WARN'],
-            [LogLevel::NOTICE,    'NOTC'],
-            [LogLevel::INFO,      'INFO'],
-            [LogLevel::DEBUG,     'DEBG'],
-        ];
-    }
-
     public function testLogWithPlaceholderValues()
     {
         $this->logger->log(
@@ -96,7 +83,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     public function testLogIgnoresLowLogLevel()
     {
         $this->logger = new Logger(LogLevel::INFO);
-
+        $this->logger->setIsolator($this->isolator);
         $this->logger->debug('This should not be logged.');
 
         Phake::verifyNoInteraction($this->isolator);
@@ -116,9 +103,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         $this->logger->error(
             'Some test error. Exception: {exception}',
-            [
-                'exception' => $exception
-            ]
+            ['exception' => $exception]
         );
 
         Phake::verify($this->isolator)->fwrite(
@@ -139,5 +124,132 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         Phake::verify($this->exceptionRenderer)->render(
             $exception
         );
+    }
+
+    public function testExceptionRendererIsNotUsedIfDebugIsDisabled()
+    {
+        $exception = new Exception('This is the exception message.');
+
+        $this->logger = new Logger(LogLevel::INFO);
+        $this->logger->setIsolator($this->isolator);
+        $this->logger->debug('This should not be logged.');
+
+        $this->logger->error(
+            'Log message.',
+            ['exception' => $exception]
+        );
+
+        Phake::verifyNoInteraction($this->exceptionRenderer);
+    }
+
+    /**
+     * @dataProvider logTestVectors
+     */
+    public function testLogWithAnsi($logLevel, $logLevelText, $levelColor, $messageColor)
+    {
+        Phake::when($this->isolator)
+            ->function_exists('posix_isatty')
+            ->thenReturn(true);
+
+        Phake::when($this->isolator)
+            ->posix_isatty('<resource>')
+            ->thenReturn(true);
+
+        $this->logger->log(
+            $logLevel,
+            'Message with a {placeholder}.',
+            ['placeholder' => 'styled placeholder']
+        );
+
+        $expectedMessage = "<ESC>[2;37m<date><ESC>[39;49;22m "
+                         . $levelColor
+                         . $logLevelText
+                         . "<ESC>[39;49;22m "
+                         . $messageColor
+                         . "Message with a <ESC>[4mstyled placeholder<ESC>[24m.<ESC>[39;49;22m"
+                         . PHP_EOL;
+
+        $message = null;
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            Phake::capture($message)
+        );
+
+        $this->assertEquals(
+            $expectedMessage,
+            str_replace("\033", '<ESC>', $message)
+        );
+    }
+
+    public function testLogDoesNotLogIfAnsiDisabled()
+    {
+        Phake::when($this->isolator)
+            ->function_exists('posix_isatty')
+            ->thenReturn(true);
+
+        Phake::when($this->isolator)
+            ->posix_isatty('<resource>')
+            ->thenReturn(true);
+
+        $this->logger = new Logger(LogLevel::INFO, false);
+        $this->logger->setIsolator($this->isolator);
+
+        $this->logger->info('Test message.');
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> INFO Test message.' . PHP_EOL
+        );
+    }
+
+    public function testLogDoesNotUseAnsiIfPosixExtensionNotAvailable()
+    {
+        Phake::when($this->isolator)
+            ->function_exists('posix_isatty')
+            ->thenReturn(false);
+
+        Phake::when($this->isolator)
+            ->posix_isatty('<resource>')
+            ->thenReturn(true);
+
+        $this->logger->info('Test message.');
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> INFO Test message.' . PHP_EOL
+        );
+    }
+
+    public function testLogDoesNotUseAnsiIfNotATTY()
+    {
+        Phake::when($this->isolator)
+            ->function_exists('posix_isatty')
+            ->thenReturn(true);
+
+        Phake::when($this->isolator)
+            ->posix_isatty('<resource>')
+            ->thenReturn(false);
+
+        $this->logger->info('Test message.');
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> INFO Test message.' . PHP_EOL
+        );
+    }
+
+    public function logTestVectors()
+    {
+        return [
+            [LogLevel::EMERGENCY, 'EMER', "<ESC>[1;37;41m", "<ESC>[0;31m"],
+            [LogLevel::ALERT,     'ALRT', "<ESC>[1;37;41m", "<ESC>[0;31m"],
+            [LogLevel::CRITICAL,  'CRIT', "<ESC>[1;37;41m", "<ESC>[0;31m"],
+            [LogLevel::ERROR,     'ERRO', "<ESC>[0;31m",    "<ESC>[0;31m"],
+            [LogLevel::WARNING,   'WARN', "<ESC>[0;33m",    "<ESC>[0;33m"],
+            [LogLevel::NOTICE,    'NOTC', "<ESC>[0;34m",    "<ESC>[0;34m"],
+            [LogLevel::INFO,      'INFO', "<ESC>[1;37m",    "<ESC>[39;49;22m"],
+            [LogLevel::DEBUG,     'DEBG', "<ESC>[0m",       "<ESC>[2;37m"],
+        ];
     }
 }

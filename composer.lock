@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6bf9b4eef8ce11b3ba44e4a8c236c3ec",
+    "hash": "749f131007356731b0072aedc8850b21",
     "packages": [
         {
             "name": "icecave/isolator",
