@@ -35,4 +35,4 @@ The output of the example above is:
 <!-- references -->
 [Build Status]: http://img.shields.io/travis/IcecaveStudios/stump/develop.svg?style=flat-square
 [Test Coverage]: http://img.shields.io/coveralls/IcecaveStudios/stump/develop.svg?style=flat-square
-[SemVer]: http://img.shields.io/:semver-0.4.1-yellow.svg?style=flat-square
+[SemVer]: http://img.shields.io/:semver-0.5.0-yellow.svg?style=flat-square
