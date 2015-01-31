@@ -157,8 +157,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         $this->logger->log(
             $logLevel,
-            'Message with a {placeholder}.',
-            ['placeholder' => 'styled placeholder']
+            'Log message.'
         );
 
         $expectedMessage = "<ESC>[2;37m<date><ESC>[39;49;22m "
@@ -166,7 +165,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
                          . $logLevelText
                          . "<ESC>[39;49;22m "
                          . $messageColor
-                         . "Message with a <ESC>[4mstyled placeholder<ESC>[24m.<ESC>[39;49;22m"
+                         . "Log message.<ESC>[39;49;22m"
                          . PHP_EOL;
 
         $message = null;

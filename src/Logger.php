@@ -175,9 +175,9 @@ class Logger implements LoggerInterface
         $replacements = [];
         foreach ($context as $key => $value) {
             if ($key === 'exception' && $value instanceof Exception) {
-                $replacements['{' . $key . '}'] = $this->underline($value->getMessage());
+                $replacements['{' . $key . '}'] = $value->getMessage();
             } else {
-                $replacements['{' . $key . '}'] = $this->underline($value);
+                $replacements['{' . $key . '}'] = $value;
             }
         }
 
@@ -193,15 +193,6 @@ class Logger implements LoggerInterface
         return $code . $text . self::ANSI_RESET;
     }
 
-    private function underline($text)
-    {
-        if (!$this->ansi) {
-            return $text;
-        }
-
-        return self::ANSI_UNDERLINE_ON . $text . self::ANSI_UNDERLINE_OFF;
-    }
-
     const ANSI_RESET         = "\033[39;49;22m";
     const ANSI_RED_INVERSE   = "\033[1;37;41m";
     const ANSI_RED           = "\033[0;31m";
@@ -210,8 +201,6 @@ class Logger implements LoggerInterface
     const ANSI_WHITE         = "\033[1;37m";
     const ANSI_GRAY          = "\033[0m";
     const ANSI_DARK_GRAY     = "\033[2;37m";
-    const ANSI_UNDERLINE_ON  = "\033[4m";
-    const ANSI_UNDERLINE_OFF = "\033[24m";
 
     private static $levels = [
         LogLevel::EMERGENCY => 7,
