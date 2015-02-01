@@ -1,7 +1,8 @@
 <?php
-namespace Icecave\Stump;
+namespace Icecave\Stump\ExceptionRenderer;
 
 use Exception;
+use LogicException;
 use PHPUnit_Framework_TestCase;
 
 class ExceptionRendererTest extends PHPUnit_Framework_TestCase
@@ -13,8 +14,8 @@ class ExceptionRendererTest extends PHPUnit_Framework_TestCase
             10
         );
 
-        $this->testException = new TestException(
-            'A custom exception.',
+        $this->testException = new LogicException(
+            'Another exception.',
             20,
             $this->exception
         );

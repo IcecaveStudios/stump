@@ -1,5 +1,5 @@
 <?php
-namespace Icecave\Stump;
+namespace Icecave\Stump\ExceptionRenderer;
 
 use Exception;
 

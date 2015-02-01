@@ -3,6 +3,11 @@ namespace Icecave\Stump;
 
 use Exception;
 use Icecave\Isolator\IsolatorTrait;
+use Icecave\Stump\ExceptionRenderer\ExceptionRenderer;
+use Icecave\Stump\ExceptionRenderer\ExceptionRendererInterface;
+use Icecave\Stump\MessageRenderer\AnsiMessageRenderer;
+use Icecave\Stump\MessageRenderer\MessageRendererInterface;
+use Icecave\Stump\MessageRenderer\PlainMessageRenderer;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
@@ -15,19 +20,12 @@ class Logger implements LoggerInterface
     use IsolatorTrait;
     use LoggerTrait;
 
-    /**
-     * @param string                          $minimumLogLevel   The minimum log level to include in the output.
-     * @param boolean|null                    $ansi              True to use ANSI control codes, null to decide automatically based on the terminal.
-     * @param string                          $fileName          The target filename.
-     * @param string                          $dateFormat        The format specifier to use for outputting dates.
-     * @param ExceptionRendererInterface|null $exceptionRenderer The exception renderer to use.
-     */
     public function __construct(
         $minimumLogLevel = LogLevel::DEBUG,
-        $ansi = null,
+        MessageRendererInterface $messageRenderer = null,
+        ExceptionRendererInterface $exceptionRenderer = null,
         $fileName = 'php://stdout',
-        $dateFormat = 'Y-m-d H:i:s',
-        ExceptionRendererInterface $exceptionRenderer = null
+        $dateFormat = 'Y-m-d H:i:s'
     ) {
         if (null === $exceptionRenderer) {
             $exceptionRenderer = new ExceptionRenderer();
@@ -36,7 +34,7 @@ class Logger implements LoggerInterface
         $this->minimumLogLevel   = self::$levels[$minimumLogLevel];
         $this->dateFormat        = $dateFormat;
         $this->fileName          = $fileName;
-        $this->ansi              = $ansi;
+        $this->messageRenderer   = $messageRenderer;
         $this->exceptionRenderer = $exceptionRenderer;
         $this->exceptionCount    = 0;
     }
@@ -54,19 +52,19 @@ class Logger implements LoggerInterface
             return;
         }
 
-        $stream  = $this->stream();
-        $message = $this->generateLogMessage(
+        $iso    = $this->isolator();
+        $stream = $this->stream();
+        $output = $this->messageRenderer->render(
             $level,
-            $message,
-            $context
+            self::$levelText[$level],
+            $iso->date($this->dateFormat),
+            $this->substitutePlaceholders(
+                $message,
+                $context
+            )
         );
 
-        $this
-            ->isolator()
-            ->fwrite(
-                $stream,
-                $message . PHP_EOL
-            );
+        $iso->fwrite($stream, $output . PHP_EOL);
 
         if (
             isset($context['exception'])
@@ -128,34 +126,19 @@ class Logger implements LoggerInterface
                 'w'
             );
 
-            if (null === $this->ansi) {
-                $this->ansi = $iso->function_exists('posix_isatty')
-                           && $iso->posix_isatty($this->stream);
+            if (null === $this->messageRenderer) {
+                $ansi = $iso->function_exists('posix_isatty')
+                     && $iso->posix_isatty($this->stream);
+
+                if ($ansi) {
+                    $this->messageRenderer = new AnsiMessageRenderer;
+                } else {
+                    $this->messageRenderer = new PlainMessageRenderer;
+                }
             }
         }
 
         return $this->stream;
-    }
-
-    public function generateLogMessage($level, $message, array $context)
-    {
-        $dateTime = $this
-            ->isolator()
-            ->date($this->dateFormat);
-
-        $levelText = self::$levelText[$level];
-
-        $message = $this->substitutePlaceholders(
-            $message,
-            $context
-        );
-
-        return sprintf(
-            '%s %s %s',
-            $this->color(self::ANSI_DARK_GRAY, $dateTime),
-            $this->color(self::$levelStyle[$level], $levelText),
-            $this->color(self::$messageStyle[$level], $message)
-        );
     }
 
     /**
@@ -184,24 +167,6 @@ class Logger implements LoggerInterface
         return strtr($message, $replacements);
     }
 
-    private function color($code, $text)
-    {
-        if (!$this->ansi) {
-            return $text;
-        }
-
-        return $code . $text . self::ANSI_RESET;
-    }
-
-    const ANSI_RESET         = "\033[39;49;22m";
-    const ANSI_RED_INVERSE   = "\033[1;37;41m";
-    const ANSI_RED           = "\033[0;31m";
-    const ANSI_YELLOW        = "\033[0;33m";
-    const ANSI_BLUE          = "\033[0;34m";
-    const ANSI_WHITE         = "\033[1;37m";
-    const ANSI_GRAY          = "\033[0m";
-    const ANSI_DARK_GRAY     = "\033[2;37m";
-
     private static $levels = [
         LogLevel::EMERGENCY => 7,
         LogLevel::ALERT     => 6,
@@ -224,32 +189,10 @@ class Logger implements LoggerInterface
         LogLevel::DEBUG     => 'DEBG',
     ];
 
-    private static $levelStyle = [
-        LogLevel::EMERGENCY => self::ANSI_RED_INVERSE,
-        LogLevel::ALERT     => self::ANSI_RED_INVERSE,
-        LogLevel::CRITICAL  => self::ANSI_RED_INVERSE,
-        LogLevel::ERROR     => self::ANSI_RED,
-        LogLevel::WARNING   => self::ANSI_YELLOW,
-        LogLevel::NOTICE    => self::ANSI_BLUE,
-        LogLevel::INFO      => self::ANSI_WHITE,
-        LogLevel::DEBUG     => self::ANSI_GRAY,
-    ];
-
-    private static $messageStyle = [
-        LogLevel::EMERGENCY => self::ANSI_RED,
-        LogLevel::ALERT     => self::ANSI_RED,
-        LogLevel::CRITICAL  => self::ANSI_RED,
-        LogLevel::ERROR     => self::ANSI_RED,
-        LogLevel::WARNING   => self::ANSI_YELLOW,
-        LogLevel::NOTICE    => self::ANSI_BLUE,
-        LogLevel::INFO      => self::ANSI_RESET,
-        LogLevel::DEBUG     => self::ANSI_DARK_GRAY,
-    ];
-
     private $minimumLogLevel;
     private $dateFormat;
     private $fileName;
-    private $ansi;
+    private $messageRenderer;
     private $exceptionRenderer;
     private $exceptionCount;
     private $stream;

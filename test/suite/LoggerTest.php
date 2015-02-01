@@ -3,6 +3,7 @@ namespace Icecave\Stump;
 
 use Exception;
 use Icecave\Isolator\Isolator;
+use Icecave\Stump\MessageRenderer\PlainMessageRenderer;
 use PHPUnit_Framework_TestCase;
 use Phake;
 use Psr\Log\LogLevel;
@@ -21,7 +22,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->date(Phake::anyParameters())
             ->thenReturn('<date>');
 
-        $this->exceptionRenderer = Phake::mock('Icecave\Stump\ExceptionRendererInterface');
+        $this->exceptionRenderer = Phake::mock('Icecave\Stump\ExceptionRenderer\ExceptionRendererInterface');
 
         Phake::when($this->exceptionRenderer)
             ->render(Phake::anyParameters())
@@ -34,9 +35,9 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $this->logger = new Logger(
             LogLevel::DEBUG,
             null,
+            $this->exceptionRenderer,
             'php://stdout',
-            'Y-m-d H:i:s',
-            $this->exceptionRenderer
+            'Y-m-d H:i:s'
         );
 
         $this->logger->setIsolator($this->isolator);
@@ -142,10 +143,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         Phake::verifyNoInteraction($this->exceptionRenderer);
     }
 
-    /**
-     * @dataProvider logTestVectors
-     */
-    public function testLogWithAnsi($logLevel, $logLevelText, $levelColor, $messageColor)
+    public function testLogWithAnsi()
     {
         Phake::when($this->isolator)
             ->function_exists('posix_isatty')
@@ -156,32 +154,22 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->thenReturn(true);
 
         $this->logger->log(
-            $logLevel,
+            LogLevel::INFO,
             'Log message.'
         );
-
-        $expectedMessage = "<ESC>[2;37m<date><ESC>[39;49;22m "
-                         . $levelColor
-                         . $logLevelText
-                         . "<ESC>[39;49;22m "
-                         . $messageColor
-                         . "Log message.<ESC>[39;49;22m"
-                         . PHP_EOL;
-
-        $message = null;
 
         Phake::verify($this->isolator)->fwrite(
             '<resource>',
             Phake::capture($message)
         );
 
-        $this->assertEquals(
-            $expectedMessage,
+        $this->assertContains(
+            '<ESC>',
             str_replace("\033", '<ESC>', $message)
         );
     }
 
-    public function testLogDoesNotLogIfAnsiDisabled()
+    public function testLogDoesNotCreatedNewMessageRendererIfOneIsInjected()
     {
         Phake::when($this->isolator)
             ->function_exists('posix_isatty')
@@ -191,7 +179,10 @@ class LoggerTest extends PHPUnit_Framework_TestCase
             ->posix_isatty('<resource>')
             ->thenReturn(true);
 
-        $this->logger = new Logger(LogLevel::INFO, false);
+        $this->logger = new Logger(
+            LogLevel::INFO,
+            new PlainMessageRenderer
+        );
         $this->logger->setIsolator($this->isolator);
 
         $this->logger->info('Test message.');
@@ -241,14 +232,14 @@ class LoggerTest extends PHPUnit_Framework_TestCase
     public function logTestVectors()
     {
         return [
-            [LogLevel::EMERGENCY, 'EMER', "<ESC>[1;37;41m", "<ESC>[0;31m"],
-            [LogLevel::ALERT,     'ALRT', "<ESC>[1;37;41m", "<ESC>[0;31m"],
-            [LogLevel::CRITICAL,  'CRIT', "<ESC>[1;37;41m", "<ESC>[0;31m"],
-            [LogLevel::ERROR,     'ERRO', "<ESC>[0;31m",    "<ESC>[0;31m"],
-            [LogLevel::WARNING,   'WARN', "<ESC>[0;33m",    "<ESC>[0;33m"],
-            [LogLevel::NOTICE,    'NOTC', "<ESC>[0;34m",    "<ESC>[0;34m"],
-            [LogLevel::INFO,      'INFO', "<ESC>[1;37m",    "<ESC>[39;49;22m"],
-            [LogLevel::DEBUG,     'DEBG', "<ESC>[0m",       "<ESC>[2;37m"],
+            [LogLevel::EMERGENCY, 'EMER'],
+            [LogLevel::ALERT,     'ALRT'],
+            [LogLevel::CRITICAL,  'CRIT'],
+            [LogLevel::ERROR,     'ERRO'],
+            [LogLevel::WARNING,   'WARN'],
+            [LogLevel::NOTICE,    'NOTC'],
+            [LogLevel::INFO,      'INFO'],
+            [LogLevel::DEBUG,     'DEBG'],
         ];
     }
 }
