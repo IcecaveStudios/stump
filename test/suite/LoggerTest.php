@@ -55,7 +55,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         Phake::verify($this->isolator)->fopen(
             'php://stdout',
-            'w'
+            'a'
         );
 
         Phake::verify($this->isolator)->fwrite(

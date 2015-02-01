@@ -123,7 +123,7 @@ class Logger implements LoggerInterface
 
             $this->stream = $iso->fopen(
                 $this->fileName,
-                'w'
+                'a'
             );
 
             if (null === $this->messageRenderer) {
