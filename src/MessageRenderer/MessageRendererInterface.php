@@ -1,6 +1,6 @@
 <?php
-namespace Icecave\Stump\MessageRenderer;
 
+namespace Icecave\Stump\MessageRenderer;
 
 interface MessageRendererInterface
 {

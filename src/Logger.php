@@ -1,4 +1,5 @@
 <?php
+
 namespace Icecave\Stump;
 
 use Exception;
@@ -8,9 +9,10 @@ use Icecave\Stump\ExceptionRenderer\ExceptionRendererInterface;
 use Icecave\Stump\MessageRenderer\AnsiMessageRenderer;
 use Icecave\Stump\MessageRenderer\MessageRendererInterface;
 use Icecave\Stump\MessageRenderer\PlainMessageRenderer;
-use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
+use Throwable;
 
 /**
  * A very simple PSR-3 logger implementation that writes to STDOUT.
@@ -67,8 +69,10 @@ class Logger implements LoggerInterface
         $iso->fwrite($stream, $output . PHP_EOL);
 
         if (
-            isset($context['exception'])
-            && $context['exception'] instanceof Exception
+            isset($context['exception']) && (
+                $context['exception'] instanceof Exception || // PHP 5
+                $context['exception'] instanceof Throwable // PHP 7
+            )
         ) {
             $this->logException(
                 $context['exception']
@@ -79,16 +83,16 @@ class Logger implements LoggerInterface
     /**
      * Log an exception including the stack trace.
      *
-     * @param Exception $exception The exception to log.
+     * @param Throwable|Exception $exception The exception to log.
      */
-    private function logException(Exception $exception)
+    private function logException($exception)
     {
         // Don't generate any exception logging if DEBUG level is disabled ...
         if (self::$levels[LogLevel::DEBUG] < $this->minimumLogLevel) {
             return;
         }
 
-        $this->exceptionCount++;
+        ++$this->exceptionCount;
 
         $lines = explode(
             PHP_EOL,
@@ -131,9 +135,9 @@ class Logger implements LoggerInterface
                      && $iso->posix_isatty($this->stream);
 
                 if ($ansi) {
-                    $this->messageRenderer = new AnsiMessageRenderer;
+                    $this->messageRenderer = new AnsiMessageRenderer();
                 } else {
-                    $this->messageRenderer = new PlainMessageRenderer;
+                    $this->messageRenderer = new PlainMessageRenderer();
                 }
             }
         }
@@ -157,7 +161,12 @@ class Logger implements LoggerInterface
 
         $replacements = [];
         foreach ($context as $key => $value) {
-            if ($key === 'exception' && $value instanceof Exception) {
+            if (
+                $key === 'exception' && (
+                    $value instanceof Exception || // PHP 5
+                    $value instanceof Throwable // PHP 7
+                )
+            ) {
                 $replacements['{' . $key . '}'] = $value->getMessage();
             } else {
                 $replacements['{' . $key . '}'] = $value;

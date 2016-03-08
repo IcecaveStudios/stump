@@ -1,4 +1,5 @@
 <?php
+
 namespace Icecave\Stump\MessageRenderer;
 
 use Psr\Log\LogLevel;
@@ -34,14 +35,14 @@ final class AnsiMessageRenderer implements MessageRendererInterface
         return $style . $text . self::ANSI_RESET;
     }
 
-    const ANSI_RESET         = "\033[39;49;22m";
-    const ANSI_RED_INVERSE   = "\033[1;37;41m";
-    const ANSI_RED           = "\033[0;31m";
-    const ANSI_YELLOW        = "\033[0;33m";
-    const ANSI_BLUE          = "\033[0;34m";
-    const ANSI_WHITE         = "\033[1;37m";
-    const ANSI_GRAY          = "\033[0m";
-    const ANSI_DARK_GRAY     = "\033[2;37m";
+    const ANSI_RESET       = "\033[39;49;22m";
+    const ANSI_RED_INVERSE = "\033[1;37;41m";
+    const ANSI_RED         = "\033[0;31m";
+    const ANSI_YELLOW      = "\033[0;33m";
+    const ANSI_BLUE        = "\033[0;34m";
+    const ANSI_WHITE       = "\033[1;37m";
+    const ANSI_GRAY        = "\033[0m";
+    const ANSI_DARK_GRAY   = "\033[2;37m";
 
     private static $levelStyle = [
         LogLevel::EMERGENCY => self::ANSI_RED_INVERSE,

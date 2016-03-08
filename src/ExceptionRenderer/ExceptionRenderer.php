@@ -1,16 +1,18 @@
 <?php
+
 namespace Icecave\Stump\ExceptionRenderer;
 
 use Exception;
+use Throwable;
 
 class ExceptionRenderer implements ExceptionRendererInterface
 {
     /**
-     * @param Exception $exception The exception to render.
+     * @param Throwable|Exception $exception The exception to render.
      *
      * @return string the rendered exception.
      */
-    public function render(Exception $exception)
+    public function render($exception)
     {
         $rendered        = [];
         $renderException = $exception;
@@ -25,13 +27,13 @@ class ExceptionRenderer implements ExceptionRendererInterface
     }
 
     /**
-     * @param Exception $exception The exception to render.
+     * @param Throwable|Exception $exception The exception to render.
      *
      * @return string rendered exception.
      */
-    private function renderException(Exception $exception)
+    private function renderException($exception)
     {
-        $string  = 'Message: ' . $exception->getMessage() . PHP_EOL;
+        $string = 'Message: ' . $exception->getMessage() . PHP_EOL;
         $string .= 'Code:    ' . $exception->getCode() . PHP_EOL;
         $string .= 'Type:    ' . get_class($exception) . PHP_EOL;
 

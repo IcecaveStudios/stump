@@ -1,12 +1,14 @@
 <?php
+
 namespace Icecave\Stump;
 
 use Exception;
 use Icecave\Isolator\Isolator;
 use Icecave\Stump\MessageRenderer\PlainMessageRenderer;
-use PHPUnit_Framework_TestCase;
 use Phake;
+use PHPUnit_Framework_TestCase;
 use Psr\Log\LogLevel;
+use TypeError;
 
 class LoggerTest extends PHPUnit_Framework_TestCase
 {
@@ -127,6 +129,38 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @requires PHP 7.0
+     */
+    public function testLogThrowable()
+    {
+        $exception = new TypeError('This is the exception message.');
+
+        $this->logger->error(
+            'Some test error. Exception: {exception}',
+            ['exception' => $exception]
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> ERRO Some test error. Exception: This is the exception message.' . PHP_EOL
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> DEBG [exception 1] <the-rendered-exception-line-1>' . PHP_EOL
+        );
+
+        Phake::verify($this->isolator)->fwrite(
+            '<resource>',
+            '<date> DEBG [exception 1] <the-rendered-exception-line-2>' . PHP_EOL
+        );
+
+        Phake::verify($this->exceptionRenderer)->render(
+            $exception
+        );
+    }
+
     public function testExceptionRendererIsNotUsedIfDebugIsDisabled()
     {
         $exception = new Exception('This is the exception message.');
@@ -181,7 +215,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
 
         $this->logger = new Logger(
             LogLevel::INFO,
-            new PlainMessageRenderer
+            new PlainMessageRenderer()
         );
         $this->logger->setIsolator($this->isolator);
 

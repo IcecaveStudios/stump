@@ -1,4 +1,5 @@
 <?php
+
 namespace Icecave\Stump\MessageRenderer;
 
 use PHPUnit_Framework_TestCase;
@@ -8,7 +9,7 @@ class PlainMessageRendererTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->renderer = new PlainMessageRenderer;
+        $this->renderer = new PlainMessageRenderer();
     }
 
     public function testRender()
