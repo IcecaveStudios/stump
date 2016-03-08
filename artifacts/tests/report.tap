@@ -1,0 +1,31 @@
+TAP version 13
+ok 1 - Icecave\Stump\ExceptionRenderer\ExceptionRendererTest::testRenderSingleException
+ok 2 - Icecave\Stump\ExceptionRenderer\ExceptionRendererTest::testRenderNestedException
+ok 3 - Icecave\Stump\LoggerTest::testLog with data set #0 ('emergency', 'EMER')
+ok 4 - Icecave\Stump\LoggerTest::testLog with data set #1 ('alert', 'ALRT')
+ok 5 - Icecave\Stump\LoggerTest::testLog with data set #2 ('critical', 'CRIT')
+ok 6 - Icecave\Stump\LoggerTest::testLog with data set #3 ('error', 'ERRO')
+ok 7 - Icecave\Stump\LoggerTest::testLog with data set #4 ('warning', 'WARN')
+ok 8 - Icecave\Stump\LoggerTest::testLog with data set #5 ('notice', 'NOTC')
+ok 9 - Icecave\Stump\LoggerTest::testLog with data set #6 ('info', 'INFO')
+ok 10 - Icecave\Stump\LoggerTest::testLog with data set #7 ('debug', 'DEBG')
+ok 11 - Icecave\Stump\LoggerTest::testLogWithPlaceholderValues
+ok 12 - Icecave\Stump\LoggerTest::testLogIgnoresLowLogLevel
+ok 13 - Icecave\Stump\LoggerTest::testLogOnlyOpensFileOnce
+ok 14 - Icecave\Stump\LoggerTest::testLogException
+ok 15 - # SKIP PHP 7.0 (or later) is required.
+ok 16 - Icecave\Stump\LoggerTest::testExceptionRendererIsNotUsedIfDebugIsDisabled
+ok 17 - Icecave\Stump\LoggerTest::testLogWithAnsi
+ok 18 - Icecave\Stump\LoggerTest::testLogDoesNotCreatedNewMessageRendererIfOneIsInjected
+ok 19 - Icecave\Stump\LoggerTest::testLogDoesNotUseAnsiIfPosixExtensionNotAvailable
+ok 20 - Icecave\Stump\LoggerTest::testLogDoesNotUseAnsiIfNotATTY
+ok 21 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #0 ('emergency', '<ESC>[1;37;41m', '<ESC>[0;31m')
+ok 22 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #1 ('alert', '<ESC>[1;37;41m', '<ESC>[0;31m')
+ok 23 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #2 ('critical', '<ESC>[1;37;41m', '<ESC>[0;31m')
+ok 24 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #3 ('error', '<ESC>[0;31m', '<ESC>[0;31m')
+ok 25 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #4 ('warning', '<ESC>[0;33m', '<ESC>[0;33m')
+ok 26 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #5 ('notice', '<ESC>[0;34m', '<ESC>[0;34m')
+ok 27 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #6 ('info', '<ESC>[1;37m', '<ESC>[39;49;22m')
+ok 28 - Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender with data set #7 ('debug', '<ESC>[0m', '<ESC>[2;37m')
+ok 29 - Icecave\Stump\MessageRenderer\PlainMessageRendererTest::testRender
+1..29

@@ -1,0 +1,18 @@
+
+
+Code Coverage Report:      
+  2016-03-08 04:12:03      
+                           
+ Summary:                  
+  Classes: 80.00% (4/5)    
+  Methods: 80.00% (8/10)   
+  Lines:   95.50% (106/111)
+
+\Icecave\Stump::Logger
+  Methods:  60.00% ( 3/ 5)   Lines:  93.51% ( 72/ 77)
+\Icecave\Stump\ExceptionRenderer::ExceptionRenderer
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 22/ 22)
+\Icecave\Stump\MessageRenderer::AnsiMessageRenderer
+  Methods: 100.00% ( 2/ 2)   Lines: 100.00% (  7/  7)
+\Icecave\Stump\MessageRenderer::PlainMessageRenderer
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  5/  5)
