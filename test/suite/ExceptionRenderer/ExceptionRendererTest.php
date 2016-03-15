@@ -1,7 +1,9 @@
 <?php
-namespace Icecave\Stump;
+
+namespace Icecave\Stump\ExceptionRenderer;
 
 use Exception;
+use LogicException;
 use PHPUnit_Framework_TestCase;
 
 class ExceptionRendererTest extends PHPUnit_Framework_TestCase
@@ -13,8 +15,8 @@ class ExceptionRendererTest extends PHPUnit_Framework_TestCase
             10
         );
 
-        $this->testException = new TestException(
-            'A custom exception.',
+        $this->testException = new LogicException(
+            'Another exception.',
             20,
             $this->exception
         );
@@ -24,7 +26,7 @@ class ExceptionRendererTest extends PHPUnit_Framework_TestCase
 
     public function testRenderSingleException()
     {
-        $expected  = 'Message: ' . $this->exception->getMessage() . PHP_EOL;
+        $expected = 'Message: ' . $this->exception->getMessage() . PHP_EOL;
         $expected .= 'Code:    ' . $this->exception->getCode() . PHP_EOL;
         $expected .= 'Type:    ' . get_class($this->exception) . PHP_EOL;
         $expected .= sprintf(
@@ -50,7 +52,7 @@ class ExceptionRendererTest extends PHPUnit_Framework_TestCase
 
     public function testRenderNestedException()
     {
-        $expected  = 'Message: ' . $this->testException->getMessage() . PHP_EOL;
+        $expected = 'Message: ' . $this->testException->getMessage() . PHP_EOL;
         $expected .= 'Code:    ' . $this->testException->getCode() . PHP_EOL;
         $expected .= 'Type:    ' . get_class($this->testException) . PHP_EOL;
         $expected .= sprintf(
