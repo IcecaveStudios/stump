@@ -1,5 +1,11 @@
 # Stump Changelog
 
+### 0.6.0 (2016-03-16)
+
+* **[NEW, BC]** Added support for PHP 7 `Throwable`
+* **[NEW, BC]** Added separate message renderers to handle plain/ANSI rendering
+* **[IMPROVED]** Open the stream in append mode to support actual files (not just STDOUT)
+
 ### 0.5.0 (2015-01-31)
 
 * **[NEW]** Added optional support for ANSI color codes
