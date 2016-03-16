@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="28" assertions="40" failures="0" errors="0" time="3.367025">
-    <testsuite name="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" tests="2" assertions="2" failures="0" errors="0" time="0.021861">
-      <testcase name="testRenderSingleException" class="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" line="27" assertions="1" time="0.011373"/>
-      <testcase name="testRenderNestedException" class="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" line="53" assertions="1" time="0.010488"/>
+  <testsuite name="" tests="28" assertions="40" failures="0" errors="0" time="3.432164">
+    <testsuite name="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" tests="2" assertions="2" failures="0" errors="0" time="0.022334">
+      <testcase name="testRenderSingleException" class="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" line="27" assertions="1" time="0.011164"/>
+      <testcase name="testRenderNestedException" class="Icecave\Stump\ExceptionRenderer\ExceptionRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/ExceptionRenderer/ExceptionRendererTest.php" line="53" assertions="1" time="0.011170"/>
     </testsuite>
-    <testsuite name="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" tests="17" assertions="29" failures="0" errors="0" time="3.256382">
-      <testsuite name="Icecave\Stump\LoggerTest::testLog" tests="8" assertions="16" failures="0" errors="0" time="2.988883">
-        <testcase name="testLog with data set #0" assertions="2" time="2.772155"/>
-        <testcase name="testLog with data set #1" assertions="2" time="0.031541"/>
-        <testcase name="testLog with data set #2" assertions="2" time="0.030170"/>
-        <testcase name="testLog with data set #3" assertions="2" time="0.031601"/>
-        <testcase name="testLog with data set #4" assertions="2" time="0.030436"/>
-        <testcase name="testLog with data set #5" assertions="2" time="0.030726"/>
-        <testcase name="testLog with data set #6" assertions="2" time="0.031067"/>
-        <testcase name="testLog with data set #7" assertions="2" time="0.031186"/>
+    <testsuite name="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" tests="17" assertions="29" failures="0" errors="0" time="3.321783">
+      <testsuite name="Icecave\Stump\LoggerTest::testLog" tests="8" assertions="16" failures="0" errors="0" time="3.056776">
+        <testcase name="testLog with data set #0" assertions="2" time="2.844008"/>
+        <testcase name="testLog with data set #1" assertions="2" time="0.030118"/>
+        <testcase name="testLog with data set #2" assertions="2" time="0.030833"/>
+        <testcase name="testLog with data set #3" assertions="2" time="0.028951"/>
+        <testcase name="testLog with data set #4" assertions="2" time="0.029976"/>
+        <testcase name="testLog with data set #5" assertions="2" time="0.030700"/>
+        <testcase name="testLog with data set #6" assertions="2" time="0.030821"/>
+        <testcase name="testLog with data set #7" assertions="2" time="0.031369"/>
       </testsuite>
-      <testcase name="testLogWithPlaceholderValues" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="69" assertions="1" time="0.024783"/>
-      <testcase name="testLogIgnoresLowLogLevel" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="86" assertions="1" time="0.018863"/>
-      <testcase name="testLogOnlyOpensFileOnce" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="95" assertions="1" time="0.029193"/>
-      <testcase name="testLogException" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="103" assertions="4" time="0.051762"/>
-      <testcase name="testExceptionRendererIsNotUsedIfDebugIsDisabled" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="164" assertions="1" time="0.022646"/>
-      <testcase name="testLogWithAnsi" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="180" assertions="2" time="0.033277"/>
-      <testcase name="testLogDoesNotCreatedNewMessageRendererIfOneIsInjected" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="206" assertions="1" time="0.028122"/>
-      <testcase name="testLogDoesNotUseAnsiIfPosixExtensionNotAvailable" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="230" assertions="1" time="0.029206"/>
-      <testcase name="testLogDoesNotUseAnsiIfNotATTY" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="248" assertions="1" time="0.029647"/>
+      <testcase name="testLogWithPlaceholderValues" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="69" assertions="1" time="0.026003"/>
+      <testcase name="testLogIgnoresLowLogLevel" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="86" assertions="1" time="0.018328"/>
+      <testcase name="testLogOnlyOpensFileOnce" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="95" assertions="1" time="0.028470"/>
+      <testcase name="testLogException" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="103" assertions="4" time="0.053284"/>
+      <testcase name="testExceptionRendererIsNotUsedIfDebugIsDisabled" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="164" assertions="1" time="0.022109"/>
+      <testcase name="testLogWithAnsi" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="180" assertions="2" time="0.033186"/>
+      <testcase name="testLogDoesNotCreatedNewMessageRendererIfOneIsInjected" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="206" assertions="1" time="0.025942"/>
+      <testcase name="testLogDoesNotUseAnsiIfPosixExtensionNotAvailable" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="230" assertions="1" time="0.028537"/>
+      <testcase name="testLogDoesNotUseAnsiIfNotATTY" class="Icecave\Stump\LoggerTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/LoggerTest.php" line="248" assertions="1" time="0.029148"/>
     </testsuite>
-    <testsuite name="Icecave\Stump\MessageRenderer\AnsiMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/AnsiMessageRendererTest.php" tests="8" assertions="8" failures="0" errors="0" time="0.079407">
-      <testsuite name="Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender" tests="8" assertions="8" failures="0" errors="0" time="0.079407">
-        <testcase name="testRender with data set #0" assertions="1" time="0.010768"/>
-        <testcase name="testRender with data set #1" assertions="1" time="0.010137"/>
-        <testcase name="testRender with data set #2" assertions="1" time="0.009899"/>
-        <testcase name="testRender with data set #3" assertions="1" time="0.009422"/>
-        <testcase name="testRender with data set #4" assertions="1" time="0.010650"/>
-        <testcase name="testRender with data set #5" assertions="1" time="0.009293"/>
-        <testcase name="testRender with data set #6" assertions="1" time="0.009205"/>
-        <testcase name="testRender with data set #7" assertions="1" time="0.010033"/>
+    <testsuite name="Icecave\Stump\MessageRenderer\AnsiMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/AnsiMessageRendererTest.php" tests="8" assertions="8" failures="0" errors="0" time="0.078608">
+      <testsuite name="Icecave\Stump\MessageRenderer\AnsiMessageRendererTest::testRender" tests="8" assertions="8" failures="0" errors="0" time="0.078608">
+        <testcase name="testRender with data set #0" assertions="1" time="0.009324"/>
+        <testcase name="testRender with data set #1" assertions="1" time="0.009469"/>
+        <testcase name="testRender with data set #2" assertions="1" time="0.009319"/>
+        <testcase name="testRender with data set #3" assertions="1" time="0.010633"/>
+        <testcase name="testRender with data set #4" assertions="1" time="0.009932"/>
+        <testcase name="testRender with data set #5" assertions="1" time="0.010241"/>
+        <testcase name="testRender with data set #6" assertions="1" time="0.009815"/>
+        <testcase name="testRender with data set #7" assertions="1" time="0.009875"/>
       </testsuite>
     </testsuite>
-    <testsuite name="Icecave\Stump\MessageRenderer\PlainMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/PlainMessageRendererTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.009375">
-      <testcase name="testRender" class="Icecave\Stump\MessageRenderer\PlainMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/PlainMessageRendererTest.php" line="15" assertions="1" time="0.009375"/>
+    <testsuite name="Icecave\Stump\MessageRenderer\PlainMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/PlainMessageRendererTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.009439">
+      <testcase name="testRender" class="Icecave\Stump\MessageRenderer\PlainMessageRendererTest" file="/home/travis/build/IcecaveStudios/stump/test/suite/MessageRenderer/PlainMessageRendererTest.php" line="15" assertions="1" time="0.009439"/>
     </testsuite>
   </testsuite>
 </testsuites>

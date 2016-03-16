@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1457410323">
-  <project timestamp="1457410323">
+<coverage generated="1458086724">
+  <project timestamp="1458086724">
     <package name="Icecave\Stump\ExceptionRenderer">
       <file name="/home/travis/build/IcecaveStudios/stump/src/ExceptionRenderer/ExceptionRenderer.php">
         <class name="ExceptionRenderer" namespace="Icecave\Stump\ExceptionRenderer">
